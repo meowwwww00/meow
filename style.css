@@ -1,0 +1,751 @@
+.primary-btn {
+    background-color: #e994c8;
+    /* 使用您主題的顏色 */
+}
+
+.switch-link {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9em;
+}
+
+.switch-link a {
+    color: #e994c8;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* 訊息顯示區塊 (用於顯示成功/錯誤訊息) */
+.message {
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.message.success {
+    color: #28a745;
+}
+
+.message.error {
+    color: #dc3545;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #f8ebf4;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+
+    .header-icon {
+        /* 請確定您已經把這裡的數值設定得比圖片原始大小要小 */
+        width: 45px;
+        height: auto;
+        /* 其他輔助樣式 */
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 70%;
+    max-width: 650px;
+    /*白色大框框*/
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #000000;
+}
+
+/* 餘額區塊 */
+.balance-container {
+    background-color: #e9ecef;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#balance {
+    font-size: 2em;
+    font-weight: bold;
+    color: #009d10;
+    /* 預設綠色，JavaScript 會根據正負改變 */
+}
+
+/* 表單區塊 */
+.form-control {
+    margin-bottom: 15px;
+}
+
+.form-control label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-control input[type="text"],
+.form-control input[type="number"] {
+    border: 1px solid #ced4da;
+    border-radius: 100px;
+    display: block;
+    font-size: 16px;
+    padding: 10px;
+    width: 100%;
+}
+
+.btn {
+    cursor: pointer;
+    background-color: #e994c8;
+    color: #fff;
+    border: 0;
+    display: block;
+    font-size: 16px;
+    margin: 10px 0 30px;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+/* 交易列表 */
+.transaction-list h3 {
+    margin-bottom: 10px;
+}
+
+#list {
+    list-style: none;
+    padding: 0;
+}
+
+#list li {
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin: 10px 0;
+    border-right: 5px solid;
+    /* 用來區分收入/支出 */
+    border-radius: 4px;
+}
+
+/* 根據交易類型設定邊框顏色 */
+.plus {
+    border-right-color: #28a745;
+    /* 收入-綠色 */
+}
+
+.minus {
+    border-right-color: #dc3545;
+    /* 支出-紅色 */
+}
+
+/* 移除所有按鈕外層連結的預設底線 */
+.btn {
+    /* 如果紅線是在按鈕上，但這情況很少 */
+    text-decoration: none !important;
+}
+
+/* 針對所有連結，移除底線 */
+a {
+    text-decoration: none;
+}
+
+/* 如果紅線只在按鈕被點擊/聚焦時出現 */
+.btn:focus,
+.btn:active,
+a:focus,
+a:active {
+    outline: none !important;
+    /* 移除聚焦邊框 */
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* 針對所有的 input 欄位 */
+.form-control input {
+    /* 確保所有輸入框都有適當的寬度 */
+    width: 100%;
+
+    /* 增加內邊距以讓框框看起來更高、更寬敞 */
+    padding: 10px;
+    /* 您可以將 10px 調整為更大的數值 */
+
+    /* 讓邊框圓潤一點，增加美觀 */
+    border-radius: 100px;
+
+    /* 其他樣式... */
+}
+
+/* 針對日期欄位進行特別調整 (如果它需要與其他欄位不同的寬度) */
+#date {
+    /* 例如：如果不想讓它佔滿 100% 的寬度 */
+    width: 100%;
+}
+
+/* style.css - 收據縮圖樣式 */
+
+.receipt-thumbnail {
+    /* 1. 控制縮圖的最大尺寸 */
+    max-width: 60px;
+    /* 設定圖片最大寬度為 60 像素 */
+    max-height: 60px;
+    /* 設定圖片最大高度為 60 像素 */
+    height: auto;
+    /* 保持圖片比例，防止變形 */
+
+    /* 2. 圓角與外觀 */
+    border-radius: 4px;
+    /* 添加輕微圓角 */
+    border: 1px solid #ccc;
+    /* 添加邊框以區分背景 */
+
+    /* 3. 與周圍元素的間距 */
+    margin-right: 15px;
+    /* 與右側金額文字保持距離 */
+    vertical-align: middle;
+    /* 垂直對齊，確保圖片與文字對齊 */
+
+    /* 確保圖片在容器內正常顯示 */
+    object-fit: cover;
+}
+
+/* style.css - 自定義檔案上傳樣式 */
+
+.hidden-file-input {
+    /* 絕對隱藏原本的 input 欄位 */
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.custom-file-label {
+    /* 模擬按鈕的樣式 */
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.custom-file-label:hover {
+    background-color: #e9e9e9;
+}
+
+.file-name-display {
+    /* 檔案名稱顯示區塊的樣式 */
+    display: block;
+    /* 讓檔名單獨一行顯示 */
+    margin-top: 5px;
+    font-size: 12px;
+    color: #555;
+    /* 確保長檔名不會溢出容器，而是換行 */
+    word-break: break-all;
+    white-space: normal;
+    max-width: 100%;
+}
+
+/* style.css (新增控制項樣式) */
+
+.controls-group {
+    margin-bottom: 20px;
+    padding: 25px 35px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    background-color: #f7f7f7;
+}
+
+.filter-controls,
+.sort-controls {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.filter-controls label,
+.sort-controls label {
+    font-weight: bold;
+    margin-right: 10px;
+    white-space: nowrap;
+    /* 避免文字換行 */
+}
+
+#date-filter {
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    flex-grow: 1;
+    /* 讓日期輸入欄位佔用剩餘空間 */
+    margin-right: 10px;
+}
+
+.filter-btn {
+    padding: 8px 12px;
+    background-color: #6c757d;
+    /* 灰色按鈕 */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.sort-btn {
+    padding: 8px 10px;
+    margin-right: 5px;
+    background-color: #e994c8;
+    /* 使用您的主題顏色 */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* style.css */
+
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f1f3f5;
+    padding: 8px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.logout-link {
+    background: none;
+    border: none;
+    color: #f33e50;
+    /* 紅色字體表示登出 */
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout-link:hover {
+    color: #a71d2a;
+}
+
+.text-link {
+    background: none;
+    border: none;
+    color: #6d90f2;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+}
+
+.small-btn {
+    margin: 5px 0 !important;
+    padding: 5px !important;
+    font-size: 14px !important;
+    width: auto !important;
+    display: inline-block !important;
+    padding: 5px 15px !important;
+}
+
+.message {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.message.success {
+    color: #28a745;
+}
+
+/* 綠色 */
+.message.error {
+    color: #dc3545;
+}
+
+/* style.css */
+
+.type-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 100px;
+    /* 配合您的圓角風格 */
+    font-size: 16px;
+    background-color: white;
+    cursor: pointer;
+    outline: none;
+}
+
+.type-select:focus {
+    border-color: #e994c8;
+    /* 聚焦時變成粉色 */
+}
+
+.delete-btn {
+    cursor: pointer;
+    background-color: transparent;
+    /* 背景透明 */
+    border: none;
+    color: #ffb3b3;
+    /* 淺紅色，不要太刺眼 */
+    font-size: 18px;
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    /* 圓形背景 */
+}
+
+.delete-btn:hover {
+    color: #ff4d4d;
+    /* 懸浮時顏色加深 */
+    background-color: #fff0f0;
+    /* 出現淡淡的紅背景 */
+    transform: scale(1.1);
+    /* 稍微放大 */
+}
+
+/* 方案一：垃圾桶按鈕美化 */
+.delete-btn {
+    cursor: pointer;
+    background-color: transparent;
+    /* 背景透明 */
+    border: none;
+    /* 移除邊框 */
+    color: #ffb3b3;
+    /* 平常是淺粉紅色 */
+    font-size: 18px;
+    /* 調整垃圾桶大小 */
+    padding: 5px 10px;
+    transition: all 0.3s ease;
+    /* 加上平滑轉換動畫 */
+    border-radius: 50%;
+    /* 讓觸控/點擊區域變圓形 */
+    margin-left: 10px;
+}
+
+/* 滑鼠移上去時的效果 */
+.delete-btn:hover {
+    color: #ff4d4d;
+    /* 變成明顯的紅色 */
+    background-color: #fff0f0;
+    /* 出現淡淡的紅色圓形背景 */
+    transform: scale(1.2);
+    /* 按鈕稍微放大，增加互動感 */
+}
+
+/* 為了確保垃圾桶在清單最右邊，我們可以微調 li 樣式 */
+#list li {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* style.css */
+.text-link {
+    background: none;
+    border: none;
+    color: #6d90f2;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.text-link:hover {
+    color: #4a6fdc;
+}
+
+.switch-link {
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* style.css 重點節錄 */
+body {
+    background-color: #f8ebf4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 700px;
+    /* 登入註冊頁稍微窄一點比較好看 */
+    text-align: center;
+}
+
+.text-link {
+    background: none;
+    border: none;
+    color: #6d90f2;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 100px;
+    background-color: #e994c8;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+/* 確保 a 標籤的連結沒有底線且顏色一致 */
+.switch-link a {
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.switch-link a:hover {
+    text-decoration: underline;
+}
+
+/* 強制縮小復原按鈕與排序按鈕 */
+.filter-btn,
+.sort-btn {
+    padding: 5px 12px !important;
+    /* 強制縮小高度與寬度 */
+    font-size: 12px !important;
+    /* 強制縮小字體 */
+    width: auto !important;
+    /* 確保按鈕不撐寬 */
+    min-width: 60px !important;
+    /* 設定最小寬度以免太擠 */
+    height: 32px !important;
+    /* 統一高度，讓畫面整齊 */
+    line-height: 1 !important;
+    /* 確保文字置中 */
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 2px !important;
+    /* 按鈕之間的間距 */
+}
+
+/* 讓日期篩選區塊更緊湊 */
+.filter-controls {
+    display: flex !important;
+    gap: 8px !important;
+    /* 讓輸入框和按鈕靠更近 */
+    align-items: center !important;
+    justify-content: flex-start !important;
+}
+
+#date-filter {
+    max-width: 180px !important;
+    /* 限制日期選取框的寬度，不要太長 */
+    height: 32px !important;
+    /* 高度與按鈕一致 */
+    padding: 0 10px !important;
+}
+
+/* 針對日期篩選與排序的灰色區塊 */
+.controls-group {
+    background-color: #f1f3f5 !important;
+    /* 淺灰色背景 */
+    padding: 30px 40px !important;
+    /* 上下增加到 30px，左右增加到 40px，讓框框變大 */
+    margin: 20px 0 30px 0 !important;
+    /* 與上下元素保持適當距離 */
+    border-radius: 15px !important;
+    /* 圓角稍微加大，看起來更柔和 */
+    border: 1px solid #e2e8f0 !important;
+    /* 加上淡淡的邊框線 */
+
+    /* 確保內部的排列整齊 */
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    /* 讓「搜尋日期」和「排序」兩行之間不要太擠 */
+}
+
+/* 讓裡面的標籤（搜尋日期：、排序：）更有質感 */
+.controls-group label {
+    font-size: 17px !important;
+    font-weight: bold !important;
+    color: #4a5568 !important;
+    margin-right: 15px !important;
+    min-width: 80px !important;
+    /* 讓文字標題對齊 */
+    display: inline-block !important;
+}
+
+/* 修正按鈕和輸入框的排列 */
+.filter-controls,
+.sort-controls {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    /* 寬度不夠時自動換行 */
+    gap: 12px !important;
+    /* 按鈕與輸入框之間的間隙 */
+}
+
+/* 調整日期輸入框的高度 */
+#date-filter {
+    padding: 8px 15px !important;
+    height: 40px !important;
+    border-radius: 10px !important;
+    border: 1px solid #cbd5e0 !important;
+}
+
+/* 確保灰色框框是垂直排列，且有足夠內邊距 */
+.controls-group {
+    background-color: #f1f3f5 !important;
+    padding: 25px !important;
+    border-radius: 15px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    /* 讓內容由上而下排 */
+    gap: 15px !important;
+    /* 每一列之間的間距 */
+    margin-bottom: 20px !important;
+    text-align: left !important;
+    /* 讓標籤對齊左邊 */
+}
+
+/* 每一列的排版 */
+.filter-controls,
+.sort-controls,
+.summary-toggle-area {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+}
+
+/* 讓 label 寬度統一，看起來更整齊 */
+.controls-group label {
+    min-width: 85px !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+}
+
+/* 縮小按鈕，讓它們在框框內不顯得擁擠 */
+.filter-btn,
+.sort-btn {
+    padding: 6px 15px !important;
+    font-size: 13px !important;
+    width: auto !important;
+    margin: 0 !important;
+}
+
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    50% {
+        transform: translateX(5px);
+    }
+
+    75% {
+        transform: translateX(-5px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+.alert-banner {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 1. 強制灰色框框內的所有列對齊左側 */
+.controls-group {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    /* 核心：強制子元素靠左 */
+    gap: 15px !important;
+    padding: 25px !important;
+    text-align: left !important;
+}
+
+/* 2. 修正每一列的 Flex 排列方式 */
+.filter-controls,
+.sort-controls {
+    display: flex !important;
+    width: 100% !important;
+    /* 佔滿寬度但內容靠左 */
+    justify-content: flex-start !important;
+    /* 核心：內容不分散 */
+    align-items: center !important;
+    gap: 10px !important;
+    /* 元件之間的間距 */
+    flex-wrap: nowrap !important;
+    /* 避免按鈕跳行，除非螢幕太窄 */
+}
+
+/* 3. 移除日期輸入框的自動撐開屬性 */
+#date-filter {
+    flex-grow: 0 !important;
+    /* 禁止它佔用剩餘空間 */
+    width: 180px !important;
+    /* 設定固定寬度，讓按鈕緊跟在後 */
+    margin-right: 5px !important;
+}
+
+/* 4. 讓 Label 標籤寬度一致，產生對齊線的效果 */
+.controls-group label {
+    min-width: 85px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    /* 避免標籤被壓縮 */
+}
+
+/* 5. 確保按鈕不會因為 width: 100% 變大 */
+.filter-btn,
+.sort-btn {
+    width: auto !important;
+    flex-shrink: 0 !important;
+}

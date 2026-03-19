@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>註冊 - 班費記帳系統</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1><img src="image/mmmm.PNG" class="header-icon" alt="貓咪">班費記帳系統</h1>
+
+        <form id="register-form">
+            <div class="form-control">
+                <label for="reg-username">設定帳號：</label>
+                <input type="text" id="reg-username" placeholder="請輸入帳號" required>
+            </div>
+
+            <div class="form-control">
+                <label for="reg-password">設定密碼：</label>
+                <input type="password" id="reg-password" placeholder="至少 6 位數密碼" required>
+            </div>
+
+            <div class="form-control">
+                <label for="confirm-password">確認密碼：</label>
+                <input type="password" id="confirm-password" placeholder="請再次輸入密碼" required>
+            </div>
+
+            <button type="submit" class="btn">立即註冊</button>
+
+            <div class="switch-link">
+                已經有帳號了？ <a href="login.html" style="color: #6d90f2; text-decoration: underline;">返回登入</a>
+            </div>
+        </form>
+
+        <p id="reg-message" class="message"></p>
+    </div>
+    <script src="register.js"></script>
+</body>
+
+</html>
