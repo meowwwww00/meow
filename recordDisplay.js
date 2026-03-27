@@ -1,4 +1,16 @@
-// 1. 取得登入狀態與金鑰
+import { db } from './firebase-config.js';
+import { collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// 範例：從 Firebase 讀取所有帳目
+async function getRecordsFromFirebase() {
+    const q = query(collection(db, "transactions"), orderBy("date", "desc"));
+    const querySnapshot = await getDocs(q);
+    const records = [];
+    querySnapshot.forEach((doc) => {
+        records.push(doc.data());
+    });
+    return records;
+}
 const currentUser = localStorage.getItem('currentUser');
 const storageKey = currentUser ? `transactions_${currentUser}` : 'transactions';
 
