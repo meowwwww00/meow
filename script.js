@@ -1,3 +1,38 @@
+// --- 1. 引入 Firebase (這幾行一定要在最上面) ---
+import { db } from './firebase-config.js';
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+// --- 2. 找到你原本處理「提交表單」的事件 ---
+async function handleFormSubmit(event) {
+    event.preventDefault(); // 防止網頁重整
+
+    const date = document.getElementById('date').value;
+    const description = document.getElementById('description').value;
+    const amount = document.getElementById('amount').value;
+
+    try {
+        // 🚀 關鍵：將資料推送到 Firebase
+        const docRef = await addDoc(collection(db, "transactions"), {
+            date: date,
+            description: description,
+            amount: Number(amount),
+            timestamp: new Date()
+        });
+
+        console.log("雲端儲存成功，ID 為: ", docRef.id);
+        alert("資料已同步到雲端！🐾");
+        
+        // 儲存後跳轉回明細頁
+        window.location.href = 'record.html'; 
+        
+    } catch (e) {
+        console.error("儲存失敗: ", e);
+        alert("儲存失敗，請檢查網路或 Firebase 規則");
+    }
+}
+
+// 綁定按鈕
+document.getElementById('transactionForm').addEventListener('submit', handleFormSubmit);
 const balanceDisplay = document.getElementById('balance');
 const form = document.getElementById('add-transaction-form');
 const descriptionInput = document.getElementById('description');
