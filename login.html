@@ -10,31 +10,77 @@
 
 <body>
     <div class="container">
-        <h1><img src="image/mmmm.PNG" class="header-icon" alt="貓咪"> 班費記帳系統</h1>
+        <div class="header-section">
+            <img src="image/mmmm.PNG" class="header-icon" alt="貓咪">
+            <h1>班費記帳系統</h1>
+        </div>
+
+        <button id="google-login-btn" class="google-btn">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="20">
+            使用 Google 帳號登入
+        </button>
+
+        <div class="divider">或者使用 Email 註冊</div>
 
         <form id="login-form">
             <div class="form-control">
-                <label for="username">帳號：</label>
-                <input type="text" id="username" placeholder="請輸入帳號" required>
+                <label>帳號：</label>
+                <input type="email" id="email" placeholder="請輸入 Email" required>
             </div>
-
             <div class="form-control">
-                <label for="password">密碼：</label>
+                <label>密碼：</label>
                 <input type="password" id="password" placeholder="請輸入密碼" required>
             </div>
-
             <button type="submit" class="btn">登入</button>
+
             <div class="switch-link">
                 <a href="reset_password.html" class="text-link">忘記密碼？</a>
             </div>
             <div class="switch-link">
-                還沒有帳號？ <a href="register.html" style="color: #e994c8; font-weight: bold;">立即註冊</a>
+                還沒有帳號？ <a href="register.html" class="primary-link">立即註冊</a>
             </div>
         </form>
-
         <p id="message" class="message"></p>
     </div>
-    <script src="login.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-bvmNnYsdEIkkeKPFsEakatlhyRH7xEg",
+            authDomain: "meow-e7846.firebaseapp.com",
+            projectId: "meow-e7846",
+            storageBucket: "meow-e7846.firebasestorage.app",
+            messagingSenderId: "743672734125",
+            appId: "1:743672734125:web:7d9f6fb1cac5b18ef48124"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+
+        // Google 登入
+        document.getElementById('google-login-btn').onclick = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                localStorage.setItem('currentUser', result.user.email);
+                window.location.href = 'index.html';
+            } catch (error) { alert(error.message); }
+        };
+
+        // 帳密登入
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                localStorage.setItem('currentUser', email);
+                window.location.href = 'index.html';
+            } catch (error) { document.getElementById('message').innerText = "登入失敗"; }
+        };
+    </script>
 </body>
 
 </html>

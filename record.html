@@ -21,9 +21,12 @@
                 <h3>日期篩選與排序</h3>
 
                 <div class="filter-controls">
-                    <label>搜尋日期：</label>
-                    <input type="date" id="date-filter">
-                    <button type="button" class="filter-btn" onclick="resetFilter()">復原</button>
+                    <label>搜尋期間：</label>
+                    <input type="date" id="start-date" class="date-input"> <span style="margin: 0 5px;">至</span>
+                    <input type="date" id="end-date" class="date-input">
+
+                    <button id="confirmBtn" class="btn-confirm">確定</button>
+                    <button id="resetBtn" class="btn-reset">全部紀錄</button>
                 </div>
 
                 <div class="sort-controls">
@@ -64,8 +67,12 @@
                             </ul>
                         </div>
                     </div>
-
-                    <script src="recordDisplay.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script type="module" src="recordDisplay.js"></script>
 </body>
 
 </html>

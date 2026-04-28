@@ -56,18 +56,17 @@
     <div class="stats-container">
         <h2>全年度收支統計報表</h2>
 
-        <div class="filter-controls">
+        <div class="selection-area" style="display: flex; gap: 10px; justify-content: center; align-items: center;">
             <label>選擇年份：</label>
-            <select id="yearSelect" class="year-selector">
-
+            <select id="year-select" class="type-select">
                 <option value="2025">2025年</option>
                 <option value="2026">2026年</option>
                 <option value="2027">2027年</option>
             </select>
 
             <label>選擇月份：</label>
-            <select id="monthSelect" class="month-selector">
-                <option value="">全部月份</option>
+            <select id="month-select" class="type-select">
+                <option value="all">全部月份</option>
                 <option value="01">1月</option>
                 <option value="02">2月</option>
                 <option value="03">3月</option>
@@ -81,9 +80,9 @@
                 <option value="11">11月</option>
                 <option value="12">12月</option>
             </select>
-            <button type="button" class="filter-btn" onclick="resetFilter()">重置</button>
-        </div>
 
+            <button id="statResetBtn" class="btn-reset" style="padding: 5px 15px;">重置</button>
+        </div>
 
         <table class="stats-table">
             <thead>
@@ -104,6 +103,7 @@
     </div>
 
     <script src="stats.js"></script>
+
 </body>
 
 </html>

@@ -7,10 +7,26 @@ const typeSelect = document.getElementById('type');
 const receiptInput = document.getElementById('receipt');
 const fileNameDisplay = document.getElementById('file-name-display');
 
-// 1. 取得登入狀態與專屬儲存 Key
 const currentUser = localStorage.getItem('currentUser');
 const storageKey = `transactions_${currentUser}`;
 let transactions = [];
+
+// --- 🚀 新增：偵測照片選取並顯示檔名 ---
+if (receiptInput) {
+    receiptInput.addEventListener('change', () => {
+        if (receiptInput.files.length > 0) {
+            // 當使用者選好照片時，立刻把「未選擇任何檔案」改掉
+            fileNameDisplay.innerText = `已選取：${receiptInput.files[0].name}`;
+            fileNameDisplay.style.color = "#25cc6b"; // 變成綠色提醒使用者成功了
+
+            // (加選功能) 如果你想在網頁上直接看到縮圖，可以加上這行：
+            console.log("照片已就緒，Base64 轉換將在提交時執行");
+        } else {
+            fileNameDisplay.innerText = '未選擇任何檔案';
+            fileNameDisplay.style.color = '#888';
+        }
+    });
+}
 
 function init() {
     if (!currentUser) {
@@ -33,13 +49,11 @@ function updateValues() {
     localStorage.setItem(storageKey, JSON.stringify(transactions));
 }
 
-// 新增紀錄邏輯
 if (form) {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const rawAmount = parseFloat(amountInput.value);
-        // 自動轉換正負號
         const amount = typeSelect.value === 'expense' ? -Math.abs(rawAmount) : Math.abs(rawAmount);
 
         let receiptBase64 = null;
@@ -70,7 +84,6 @@ const toBase64 = file => new Promise((resolve, reject) => {
     reader.onerror = error => reject(error);
 });
 
-// 登出功能
 const logoutBtn = document.getElementById('logout-btn');
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
@@ -79,7 +92,6 @@ if (logoutBtn) {
     });
 }
 
-// 修改密碼面板控制
 const changePwBtn = document.getElementById('change-pw-btn');
 const pwSection = document.getElementById('password-form-section');
 if (changePwBtn) {
@@ -92,11 +104,8 @@ const forgotPwBtn = document.getElementById('forgot-pw-btn');
 
 if (forgotPwBtn) {
     forgotPwBtn.addEventListener('click', () => {
-        // 方案 A：彈出提示訊息
         alert('請聯繫班級管理員或資訊股長重設密碼。');
 
-        // 方案 B：如果您有專門的找回密碼頁面（例如之前找不到的那個）
-        // window.location.href = 'change_password.html'; 
     });
 }
 init();

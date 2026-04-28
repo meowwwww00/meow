@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編輯紀錄</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container"
+        style="max-width: 500px; margin: 50px auto; padding: 20px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;">
+        <h2>✏️ 編輯班費紀錄</h2>
+
+        <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">項目：</label>
+            <input type="text" id="description"
+                style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">日期：</label>
+            <input type="date" id="date" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">類型：</label>
+            <select id="type" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                <option value="income">收入 (+)</option>
+                <option value="expense">支出 (-)</option>
+            </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 15px; text-align: left;">
+            <label style="display: block; margin-bottom: 5px; font-weight: bold;">金額：</label>
+            <input type="number" id="amount"
+                style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+        </div>
+
+        <button id="saveBtn"
+            style="background-color: #e6a2be; color: white; padding: 12px; border: none; border-radius: 10px; width: 100%; cursor: pointer; margin-top: 20px; font-size: 1em; font-weight: bold;">儲存修改</button>
+        <button onclick="history.back()"
+            style="background-color: #666; color: white; padding: 12px; border: none; border-radius: 10px; width: 100%; cursor: pointer; margin-top: 10px; font-size: 1em; font-weight: bold;">取消返回</button>
+    </div>
+
+    <script>
+        const currentUser = localStorage.getItem('currentUser');
+        const storageKey = currentUser ? `transactions_${currentUser}` : 'transactions';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const transactionId = urlParams.get('id');
+
+        const transactions = JSON.parse(localStorage.getItem(storageKey)) || [];
+        const transaction = transactions.find(t => String(t.id) === String(transactionId));
+
+        if (transaction) {
+            // 填入原本的資料
+            document.getElementById('description').value = transaction.description || transaction.text || "";
+            document.getElementById('date').value = transaction.date;
+            document.getElementById('amount').value = Math.abs(transaction.amount);
+
+            // 🚀 根據原始金額的正負號設定下拉選單
+            document.getElementById('type').value = transaction.amount >= 0 ? "income" : "expense";
+        } else {
+            alert("找不到該筆紀錄！");
+            location.href = 'record.html';
+        }
+
+        // 儲存邏輯
+        document.getElementById('saveBtn').onclick = function () {
+            const newDesc = document.getElementById('description').value;
+            const newDate = document.getElementById('date').value;
+            const newAmt = parseFloat(document.getElementById('amount').value);
+            const newType = document.getElementById('type').value;
+
+            if (!newDesc || isNaN(newAmt)) {
+                alert("請填寫完整資訊！");
+                return;
+            }
+
+            // 更新物件內容
+            transaction.description = newDesc;
+            transaction.date = newDate;
+
+            // 🚀 關鍵修改：根據選擇的類型決定儲存的正負號
+            transaction.amount = (newType === "expense") ? -Math.abs(newAmt) : Math.abs(newAmt);
+
+            localStorage.setItem(storageKey, JSON.stringify(transactions));
+            alert("修改成功！");
+            location.href = 'record.html'; // 返回明細頁
+        };
+    </script>
+</body>
+
+</html>

@@ -10,34 +10,82 @@
 
 <body>
     <div class="container">
-        <h1><img src="image/mmmm.PNG" class="header-icon" alt="貓咪">班費記帳系統</h1>
+        <div class="header-section">
+            <img src="image/mmmm.PNG" class="header-icon" alt="貓咪">
+            <h1>班費記帳系統</h1>
+        </div>
+
+        <button id="google-reg-btn" class="google-btn">
+            <div class="google-icon-wrapper">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" width="18">
+            </div>
+            使用 Google 帳號快速註冊
+        </button>
+
+        <div class="divider">或者使用 Email 註冊</div>
 
         <form id="register-form">
             <div class="form-control">
-                <label for="reg-username">設定帳號：</label>
-                <input type="text" id="reg-username" placeholder="請輸入帳號" required>
+                <label>電子郵件：</label>
+                <input type="email" id="reg-email" placeholder="example@gmail.com" required>
             </div>
-
             <div class="form-control">
-                <label for="reg-password">設定密碼：</label>
-                <input type="password" id="reg-password" placeholder="至少 6 位數密碼" required>
+                <label>設定密碼：</label>
+                <input type="password" id="reg-password" placeholder="至少 6 位數" required>
             </div>
-
-            <div class="form-control">
-                <label for="confirm-password">確認密碼：</label>
-                <input type="password" id="confirm-password" placeholder="請再次輸入密碼" required>
-            </div>
-
-            <button type="submit" class="btn">立即註冊</button>
-
+            <button type="submit" class="btn">建立帳號</button>
             <div class="switch-link">
-                已經有帳號了？ <a href="login.html" style="color: #6d90f2; text-decoration: underline;">返回登入</a>
+                已有帳號？ <a href="login.html" class="primary-link">返回登入</a>
             </div>
         </form>
-
-        <p id="reg-message" class="message"></p>
+        <p id="message" class="message"></p>
     </div>
-    <script src="register.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // 使用你提供的配置
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-bvmNnYsdEIkkeKPFsEakatlhyRH7xEg",
+            authDomain: "meow-e7846.firebaseapp.com",
+            projectId: "meow-e7846",
+            storageBucket: "meow-e7846.firebasestorage.app",
+            messagingSenderId: "743672734125",
+            appId: "1:743672734125:web:7d9f6fb1cac5b18ef48124"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+
+        // 🚀 Google 快速註冊邏輯
+        document.getElementById('google-reg-btn').onclick = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                localStorage.setItem('currentUser', result.user.email);
+                alert("註冊並登入成功！");
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error(error);
+                alert("Google 註冊失敗：" + error.message);
+            }
+        };
+
+        // 傳統 Email 註冊邏輯
+        document.getElementById('register-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                alert("帳號建立成功！請重新登入");
+                window.location.href = 'login.html';
+            } catch (error) {
+                document.getElementById('message').innerText = "註冊失敗：" + error.message;
+            }
+        };
+    </script>
 </body>
 
 </html>
