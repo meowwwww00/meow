@@ -60,15 +60,26 @@
         const auth = getAuth();
         const provider = new GoogleAuthProvider();
 
-        // Google 登入
-        document.getElementById('google-login-btn').onclick = async () => {
-            try {
-                const result = await signInWithPopup(auth, provider);
-                localStorage.setItem('currentUser', result.user.email);
-                window.location.href = 'index.html';
-            } catch (error) { alert(error.message); }
-        };
-
+       // Google 登入 (修正穩定版)
+document.getElementById('google-login-btn').onclick = async () => {
+    try {
+        // 1. 執行登入
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        
+        console.log("Google 登入成功:", user.email);
+        
+        // 2. 同步寫入 localStorage (確保舊程式也能讀到)
+        localStorage.setItem('currentUser', user.email);
+        
+        // 3. 關鍵：使用 replace 確保不會因為快取回到登入頁
+        window.location.replace('index.html'); 
+        
+    } catch (error) { 
+        console.error("Google 登入失敗：", error);
+        alert("登入出錯：" + error.message); 
+    }
+};
         // 帳密登入
         document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
