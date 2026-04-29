@@ -14,12 +14,30 @@ const auth = getAuth();
 const db = getFirestore(app);
 
 // 2. 監聽登入狀態並抓取雲端資料
-onAuthStateChanged(auth, (user) => {
+// 引入必要的 addDoc 函式
+import { addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+onAuthStateChanged(auth, async (user) => {
     if (user) {
-        console.log("登入成功，正在抓取雲端資料:", user.email);
-        startListening(user.email); // 啟動即時同步
-    } else {
-        window.location.href = 'login.html';
+        // 🚀 搬家邏輯：檢查這台電腦有沒有舊資料
+        const localKey = `transactions_${user.email}`;
+        const localData = JSON.parse(localStorage.getItem(localKey)) || [];
+
+        if (localData.length > 0) {
+            console.log("偵測到本地資料，開始搬家...");
+            for (const item of localData) {
+                await addDoc(collection(db, "transactions"), {
+                    amount: item.amount || item.money || 0,
+                    date: item.date || "2026-04-29",
+                    description: item.description || item.text || "未命名項目",
+                    user: user.email, // 綁定你的帳號
+                    createdAt: new Date()
+                });
+            }
+            localStorage.removeItem(localKey); // 搬完就刪除，避免重複
+            alert("同步完成！現在手機看得到了。");
+        }
+        startListening(user.email); 
     }
 });
 
