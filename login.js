@@ -14,7 +14,7 @@ const auth = getAuth(app);
 // --- A. 處理帳號密碼登入 ---
 document.getElementById('login-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    const email = document.getElementById('username').value.trim(); // 這裡建議 HTML 的 ID 改成 email
+    const email = document.getElementById('email').value.trim(); // 確保 ID 與 HTML 一致 // 這裡建議 HTML 的 ID 改成 email
     const password = document.getElementById('password').value;
     const message = document.getElementById('message');
 
