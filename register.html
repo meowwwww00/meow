@@ -30,7 +30,7 @@
                 <input type="email" id="reg-email" placeholder="example@gmail.com" required>
             </div>
             <div class="form-control">
-                <label>設定密碼：</label>
+                <label>密碼：</label>
                 <input type="password" id="reg-password" placeholder="至少 6 位數" required>
             </div>
             <button type="submit" class="btn">建立帳號</button>
@@ -43,7 +43,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        // 💡 1. 這裡幫你多引進了 sendEmailVerification 功能
+        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         // 使用你提供的配置
         const firebaseConfig = {
@@ -58,6 +59,11 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth();
         const provider = new GoogleAuthProvider();
+
+        // 💡 2. 這裡強制每次點擊 Google 註冊，都必須彈出帳號選擇器
+        provider.setCustomParameters({
+            prompt: 'select_account'
+        });
 
         // 🚀 Google 快速註冊邏輯
         document.getElementById('google-reg-btn').onclick = async () => {
@@ -78,8 +84,14 @@
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
-                alert("帳號建立成功！請重新登入");
+                // A. 先建立帳號
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+                // 💡 3. 這裡會立刻發送真實驗證信給剛剛填寫的 user 信箱
+                await sendEmailVerification(userCredential.user);
+
+                // B. 彈出提示通知
+                alert("帳號建立成功！驗證信已寄出，請至信箱點擊驗證連結後再進行登入。");
                 window.location.href = 'login.html';
             } catch (error) {
                 document.getElementById('message').innerText = "註冊失敗：" + error.message;
