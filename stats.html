@@ -59,6 +59,7 @@
         <div class="selection-area" style="display: flex; gap: 10px; justify-content: center; align-items: center;">
             <label>選擇年份：</label>
             <select id="year-select" class="type-select">
+                <!-- 提示：這裡面原本寫死的年份，會被 stats.js 自動動態生成與覆蓋 -->
                 <option value="2025">2025年</option>
                 <option value="2026">2026年</option>
                 <option value="2027">2027年</option>
@@ -94,6 +95,7 @@
                 </tr>
             </thead>
             <tbody id="statsBody">
+                <!-- 資料會由雲端即時載入並顯示於此 -->
             </tbody>
         </table>
 
@@ -102,7 +104,8 @@
         </div>
     </div>
 
-    <script src="stats.js"></script>
+    <!-- 🌟 關鍵修正點：加入 type="module" 讓瀏覽器支援 ES6 Import 技術 -->
+    <script type="module" src="stats.js"></script>
 
 </body>
 
