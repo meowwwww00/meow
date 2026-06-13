@@ -9,13 +9,16 @@
 </head>
 
 <body>
-    <div class="container">
+    <!-- 1. 最外層的大容器（改為透明，這樣上下兩個框框才能徹底分開，露出背景色） -->
+    <div class="container" style="background: none; box-shadow: none; padding: 0;">
+
         <!-- 頂部標題與返回主頁 -->
         <h1><img src="image/mmmm.PNG" class="header-icon" alt="貓咪"> 班費記帳明細</h1>
         <a href="index.html"><button class="btn back-btn">回主頁面</button></a>
 
-        <!-- 🎯 乾淨的第一層：日期篩選與排序區塊（已刪除重複包裹的 controls-group） -->
-        <div class="controls-group">
+        <!-- 📦 【上半部獨立方塊】：日期篩選、排序與 LINE 功能 -->
+        <div class="controls-group"
+            style="background-color: #faf4f4; padding: 25px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px;">
             <h3>日期篩選與排序</h3>
 
             <div class="filter-controls">
@@ -41,10 +44,9 @@
                 </a>
             </div>
 
-            <!-- 🎯 升級後的 LINE 提醒區塊：新增金額輸入欄位 -->
+            <!-- LINE 提醒通知區塊 -->
             <div
                 style="text-align: center; margin-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
-
                 <div
                     style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 280px;">
                     <label
@@ -57,28 +59,31 @@
                     style="background-color: #25cc6be0; color: white; border: none; padding: 12px 35px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 200px;">
                     Line提醒通知
                 </button>
-
             </div>
+        </div> <!-- 👈 關鍵修正：上半部功能方塊在這裡就完整結束並閉合！ -->
 
-            <!-- 🎯 乾淨的第二層：每月統計盒子（留給 JS 動態注入內容，不再疊床架屋） -->
-            <div id="monthly-summary-box" class="summary-hidden">
-                <div class="monthly-summary">
-                    <!-- 統計資料會由 JS 自動生成在這邊 -->
-                </div>
+
+        <!-- 🎯 每月統計盒子（留給 JS 動態注入內容，同樣放在獨立的外層） -->
+        <div id="monthly-summary-box" class="summary-hidden">
+            <div class="monthly-summary">
+                <!-- 統計資料會由 JS 自動生成在這邊 -->
             </div>
+        </div>
 
-            <!-- 🎯 乾淨的第三層：所有交易紀錄清單（拉出來獨立擺放，結構超美） -->
-            <div class="transaction-list" style="margin-top: 30px;">
-                <h3>所有紀錄</h3>
-                <ul id="list">
-                    <li style="text-align: center; color: #888; padding: 20px;">載入中...</li>
-                </ul>
-            </div>
 
-        </div> <!-- Container 結尾 -->
+        <!-- 📦 【下半部獨立方塊】：所有交易紀錄清單（已將文字全部修正為靠左對齊） -->
+        <div class="transaction-list"
+            style="background-color: #f4f6f9; padding: 25px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-top: 20px; text-align: left;">
+            <h3 style="margin-top: 0; text-align: left;">所有紀錄</h3>
+            <ul id="list" style="padding-left: 0; list-style: none; margin: 0; text-align: left;">
+                <li style="text-align: left; color: #888; padding: 20px 0;">載入中...</li>
+            </ul>
+        </div> <!-- 下半部方塊結束 -->
 
-        <!-- 核心驅動腳本 -->
-        <script type="module" src="recordDisplay.js"></script>
+    </div> <!-- 最外層 Container 結尾 -->
+
+    <!-- 核心驅動腳本 -->
+    <script type="module" src="recordDisplay.js"></script>
 </body>
 
 </html>
