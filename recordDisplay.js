@@ -136,7 +136,7 @@ window.remindToLine = function () {
         confirmPrompt = `即將發送金額 $${amount} 元的催繳通知，確定開啟 Line 分享嗎？`;
     } else {
         message = "📢 【班費繳交提醒】\n各位同學，請記得繳交本次班費！🙏";
-        confirmPrompt = "即將開啟 Line 分享（通用版），請選擇要發送的班級群組。";
+        confirmPrompt = "即將開啟 Line 分享，請選擇要發送的班級群組。";
     }
 
     // 3. 產生純文字分享網址
