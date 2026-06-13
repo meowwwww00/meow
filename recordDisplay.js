@@ -123,12 +123,30 @@ window.sortRecords = function (order) {
     initRecordDisplay(order);
 };
 window.remindToLine = function () {
-    const message = "📢 【班費繳交提醒】\n各位同學，請記得繳交本次班費！🙏";
+    // 1. 抓取 HTML 剛剛新增的金額輸入框
+    const amountInput = document.getElementById('remind-amount');
+    const amount = amountInput ? amountInput.value.trim() : '';
 
-    // 🎯 修正核心：改成 line.me/R/share，這條路徑只會傳送純文字，不會偷抓網頁網址
+    let message = "";
+    let confirmPrompt = "";
+
+    // 2. 智慧判斷：有填金額就帶入金額，沒填就發送通用版
+    if (amount && !isNaN(amount)) {
+        message = `📢 【班費繳交提醒】\n各位同學，本次需繳交班費 $${parseFloat(amount).toLocaleString()} 元，請儘速找總務股長繳交，謝謝大家！🙏`;
+        confirmPrompt = `即將發送金額 $${amount} 元的催繳通知，確定開啟 Line 分享嗎？`;
+    } else {
+        message = "📢 【班費繳交提醒】\n各位同學，請記得繳交本次班費！🙏";
+        confirmPrompt = "即將開啟 Line 分享（通用版），請選擇要發送的班級群組。";
+    }
+
+    // 3. 產生純文字分享網址
     const lineUrl = `https://line.me/R/share?text=${encodeURIComponent(message)}`;
 
-    if (confirm("即將開啟 Line 分享，請選擇要發送的群組。")) {
+    // 4. 跳出確認視窗，點選確定後發送
+    if (confirm(confirmPrompt)) {
         window.open(lineUrl, '_blank');
+
+        // 發送成功後，自動把金額輸入框清空，方便下次使用
+        if (amountInput) amountInput.value = '';
     }
 };

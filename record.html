@@ -41,33 +41,44 @@
                 </a>
             </div>
 
-            <div style="text-align: center; margin-top: 20px;">
+            <!-- 🎯 升級後的 LINE 提醒區塊：新增金額輸入欄位 -->
+            <div
+                style="text-align: center; margin-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 280px;">
+                    <label
+                        style="font-weight: bold; color: #555; font-size: 15px; white-space: nowrap;">本次催繳金額：$</label>
+                    <input type="number" id="remind-amount" placeholder="留空則不顯示金額"
+                        style="width: 100%; padding: 8px 12px; border-radius: 12px; border: 1.5px solid #ffb6c1; text-align: center; font-size: 16px; outline: none; box-sizing: border-box;">
+                </div>
+
                 <button onclick="remindToLine()"
-                    style="background-color: #25cc6be0; color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    style="background-color: #25cc6be0; color: white; border: none; padding: 12px 35px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 200px;">
                     Line提醒通知
                 </button>
+
             </div>
-        </div>
 
-        <!-- 🎯 乾淨的第二層：每月統計盒子（留給 JS 動態注入內容，不再疊床架屋） -->
-        <div id="monthly-summary-box" class="summary-hidden">
-            <div class="monthly-summary">
-                <!-- 統計資料會由 JS 自動生成在這邊 -->
+            <!-- 🎯 乾淨的第二層：每月統計盒子（留給 JS 動態注入內容，不再疊床架屋） -->
+            <div id="monthly-summary-box" class="summary-hidden">
+                <div class="monthly-summary">
+                    <!-- 統計資料會由 JS 自動生成在這邊 -->
+                </div>
             </div>
-        </div>
 
-        <!-- 🎯 乾淨的第三層：所有交易紀錄清單（拉出來獨立擺放，結構超美） -->
-        <div class="transaction-list" style="margin-top: 30px;">
-            <h3>所有紀錄</h3>
-            <ul id="list">
-                <li style="text-align: center; color: #888; padding: 20px;">載入中...</li>
-            </ul>
-        </div>
+            <!-- 🎯 乾淨的第三層：所有交易紀錄清單（拉出來獨立擺放，結構超美） -->
+            <div class="transaction-list" style="margin-top: 30px;">
+                <h3>所有紀錄</h3>
+                <ul id="list">
+                    <li style="text-align: center; color: #888; padding: 20px;">載入中...</li>
+                </ul>
+            </div>
 
-    </div> <!-- Container 結尾 -->
+        </div> <!-- Container 結尾 -->
 
-    <!-- 核心驅動腳本 -->
-    <script type="module" src="recordDisplay.js"></script>
+        <!-- 核心驅動腳本 -->
+        <script type="module" src="recordDisplay.js"></script>
 </body>
 
 </html>
