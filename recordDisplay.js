@@ -122,11 +122,13 @@ window.removeTransaction = function (id) {
 window.sortRecords = function (order) {
     initRecordDisplay(order);
 };
-
 window.remindToLine = function () {
     const message = "📢 【班費繳交提醒】\n各位同學，請記得繳交本次班費！🙏";
-    const lineUrl = `https://social-plugins.line.me/lineit/share?text=${encodeURIComponent(message)}`;
-    if (confirm("即將開啟 Line 分享，請選擇要發送的班級群組。")) {
+
+    // 🎯 修正核心：改成 line.me/R/share，這條路徑只會傳送純文字，不會偷抓網頁網址
+    const lineUrl = `https://line.me/R/share?text=${encodeURIComponent(message)}`;
+
+    if (confirm("即將開啟 Line 分享，請選擇要發送的群組。")) {
         window.open(lineUrl, '_blank');
     }
 };
