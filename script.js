@@ -135,14 +135,6 @@ if (logoutBtn) {
     });
 }
 
-// 密碼區塊顯示切換（保持原樣）
-const changePwBtn = document.getElementById('change-pw-btn');
-const pwSection = document.getElementById('password-form-section');
-if (changePwBtn) {
-    changePwBtn.addEventListener('click', () => pwSection.style.display = 'block');
-    document.getElementById('cancel-change-pw').addEventListener('click', () => pwSection.style.display = 'none');
-}
-
 // 忘記密碼提示（保持原樣）
 const forgotPwBtn = document.getElementById('forgot-pw-btn');
 if (forgotPwBtn) {

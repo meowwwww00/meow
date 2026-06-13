@@ -10,22 +10,12 @@
 
 <body>
     <div class="container">
+        <!-- 頂部使用者資訊欄（已移除修改密碼按鈕） -->
         <div class="user-info">
             <div>
                 <span>目前登入：<strong id="display-username"></strong></span>
-                <button id="change-pw-btn" class="text-link">修改密碼</button>
             </div>
             <button id="logout-btn" class="logout-link">登出</button>
-        </div>
-
-        <div id="password-form-section"
-            style="display: none; border: 1px dashed #e994c8; padding: 15px; margin-bottom: 20px; border-radius: 15px;">
-            <h4 style="margin-bottom:10px;">修改密碼</h4>
-            <div class="form-control"><input type="password" id="old-password" placeholder="輸入舊密碼"></div>
-            <div class="form-control"><input type="password" id="new-password" placeholder="輸入新密碼 (至少6位)"></div>
-            <button id="submit-change-pw" class="btn small-btn">確認修改</button>
-            <button id="cancel-change-pw" class="text-link">取消</button>
-            <p id="pw-message" class="message"></p>
         </div>
 
         <h1><img src="image/mmmm.PNG" class="header-icon" alt="貓咪"> 班費記帳系統</h1>
@@ -74,121 +64,9 @@
 
         <a href="record.html" class="btn" style="background-color: #6c757d; display: block;">查看交易紀錄</a>
     </div>
+
+    <!-- 🌟 核心主控邏輯，登入檢查、餘額即時更新與新增費用都由 script.js 統一處理 -->
     <script type="module" src="script.js"></script>
-    <script type="module">
-        // 📢 安全引進 Firebase 模組
-        import { initializeApp, getApp, getApps } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import {
-            getAuth,
-            onAuthStateChanged,
-            updatePassword,
-            reauthenticateWithCredential,
-            EmailAuthProvider
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyD-bvmNnYsdEIkkeKPFsEakatlhyRH7xEg",
-            authDomain: "meow-e7846.firebaseapp.com",
-            projectId: "meow-e7846",
-            storageBucket: "meow-e7846.firebasestorage.app",
-            messagingSenderId: "743672734125",
-            appId: "1:743672734125:web:7d9f6fb1cac5b18ef48124"
-        };
-
-        const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-        const auth = getAuth(app);
-
-        // 📋 抓取 HTML 密碼視窗元素
-        const changePwBtn = document.getElementById('change-pw-btn');
-        const cancelChangePwBtn = document.getElementById('cancel-change-pw');
-        const passwordFormSection = document.getElementById('password-form-section');
-        const oldPasswordInput = document.getElementById('old-password');
-        const newPasswordInput = document.getElementById('new-password');
-        const submitChangePwBtn = document.getElementById('submit-change-pw');
-        const pwMessage = document.getElementById('pw-message');
-
-        // 1. 點擊「修改密碼」顯示框框
-        if (changePwBtn) {
-            changePwBtn.onclick = () => {
-                passwordFormSection.style.display = 'block';
-                if (pwMessage) pwMessage.innerText = '';
-            };
-        }
-
-        // 2. 點擊「取消」隱藏框框
-        if (cancelChangePwBtn) {
-            cancelChangePwBtn.onclick = () => {
-                passwordFormSection.style.display = 'none';
-                oldPasswordInput.value = '';
-                newPasswordInput.value = '';
-            };
-        }
-
-        // 3. 🔑 關鍵修正：用一個變數悄悄在背景接住「真正準備好」的雲端登入用戶
-        let activeUser = null;
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                activeUser = user; // 雲端連線成功！順利抓到使用者，不塞車了！
-            }
-        });
-
-        // 4. 🔥 「確認修改」點擊事件
-        if (submitChangePwBtn) {
-            submitChangePwBtn.onclick = async () => {
-                const oldPassword = oldPasswordInput.value;
-                const newPassword = newPasswordInput.value;
-
-                // 確保 activeUser 已經拿到了，才執行修改
-                if (!activeUser) {
-                    alert("雲端連線初始化中，請稍等一秒鐘後再試一次！");
-                    return;
-                }
-
-                // 💡 貼心防錯機制：檢查是不是用 Google 帳號登入的
-                const isGoogleUser = activeUser.providerData.some(p => p.providerId === 'google.com');
-                if (isGoogleUser) {
-                    pwMessage.innerText = "提示：您目前使用 Google 帳號登入，請直接至 Google 設定中修改密碼！";
-                    pwMessage.style.color = "#dc3545";
-                    return;
-                }
-
-                if (!oldPassword || !newPassword) {
-                    pwMessage.innerText = "提示：請填寫所有欄位！";
-                    pwMessage.style.color = "red";
-                    return;
-                }
-                if (newPassword.length < 6) {
-                    pwMessage.innerText = "提示：新密碼至少需要 6 位數！";
-                    pwMessage.style.color = "red";
-                    return;
-                }
-
-                try {
-                    pwMessage.innerText = "正在驗證舊密碼並修改...";
-                    pwMessage.style.color = "orange";
-
-                    // 驗證舊密碼
-                    const credential = EmailAuthProvider.credential(activeUser.email, oldPassword);
-                    await reauthenticateWithCredential(activeUser, credential);
-
-                    // 正式修改密碼
-                    await updatePassword(activeUser, newPassword);
-
-                    alert("密碼修改成功！下次登入請使用新密碼。");
-                    window.location.reload();
-
-                } catch (error) {
-                    console.error(error);
-                    if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
-                        pwMessage.innerText = "修改失敗：舊密碼輸入錯誤！";
-                    } else {
-                        pwMessage.innerText = "修改失敗：" + error.message;
-                    }
-                    pwMessage.style.color = "red";
-                }
-            };
-        }
-    </script>
 </body>
 
 </html>
