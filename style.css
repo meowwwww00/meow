@@ -816,72 +816,60 @@ label {
 }
 
 /* ================================================================= */
-/* 📱 手機版 RWD 自動收合外掛（直接貼在 style.css 最底部） */
+/* 📱 手機版 RWD 強力強製版（直接覆蓋 style.css 最底部） */
 /* ================================================================= */
 @media (max-width: 480px) {
 
-    /* 1. 讓最外層的白底大容器自動縮放，左右留下美美的呼吸空間 */
-    .container {
-        width: 100% !important;
-        max-width: 95% !important;
-        padding: 15px !important;
-        margin: 10px auto !important;
-        box-sizing: border-box !important;
+    /* 1. 強制讓手機畫面絕對不能橫向滾動、不準爆版 */
+    html,
+    body {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
     }
 
-    /* 2. 修正「日期篩選與排序」這張爆開的卡片，寬度強制配合手機螢幕 */
-    /* 💡 如果你這張卡片有另外取 class 名稱（例如 .filter-card），可以加在下面 */
-    .transaction-form,
-    .balance-container,
-    div[style*="padding"] {
-        width: 100% !important;
+    /* 2. 轟炸所有容器：只要是在 container 裡面的區塊，寬度全部死守 100% */
+    .container,
+    .container *,
+    div {
         max-width: 100% !important;
         box-sizing: border-box !important;
-        padding: 15px !important;
     }
 
-    /* 3. 關鍵解藥：讓「搜尋期間：... 至 ...」在手機版自動變成「上下直列排隊」 */
-    /* 💡 請對照你包住搜尋欄位的 class，將其改成直向排列 */
-    .form-control,
-    .search-row,
-    .filter-section {
+    /* 3. 核心解藥：強制讓「搜尋期間」那一整行只要太擠，裡面的元件就自動往下掉（自動換行） */
+    /* 並且把原本橫向的 flex 排版全部強制改成直向排隊 */
+    form,
+    .filter-section,
+    div[style*="display: flex"],
+    div {
         display: flex !important;
         flex-direction: column !important;
-        /* 改為直向 */
+        /* 強制改成上下直列 */
         align-items: stretch !important;
         gap: 10px !important;
     }
 
-    /* 4. 讓日期輸入框、下拉選單在手機版自動拉寬，更好用手指點擊 */
+    /* 4. 修正輸入框與按鈕：在手機上一律拉滿拉寬，方便手指點選 */
     input[type="date"],
-    input[type="number"],
-    input[type="text"],
+    input,
     select,
-    .type-select {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-        height: 40px !important;
-        /* 手機版稍微放大一點比較好點 */
-    }
-
-    /* 5. 讓原本塞在右邊的粉紅色「確定」與「排序按鈕」自動彈性換行 */
-    /* 💡 如果你的排序按鈕有外層包住，讓它們可以自動往下掉 */
-    div,
-    .btn-group {
-        flex-wrap: wrap !important;
-        gap: 8px !important;
-    }
-
-    /* 6. 「統計報表」與「Line提醒通知」這兩個大按鈕在手機版直接拉滿，視覺更整齊 */
+    button,
     .btn,
-    .google-btn,
-    button[type="submit"] {
+    a.btn {
         width: 100% !important;
         max-width: 100% !important;
         display: block !important;
-        box-sizing: border-box !important;
-        text-align: center !important;
+        height: 42px !important;
+        /* 稍微放大，比較好點 */
         margin: 5px 0 !important;
+        white-space: normal !important;
+        /* 允許按鈕內的文字自動換行，不撐開寬度 */
+    }
+
+    /* 5. 讓原本塞在最右邊的那些排序按鈕分開，各自獨立變成大按鈕 */
+    br+button,
+    button+button,
+    .btn+.btn {
+        margin-left: 0 !important;
+        margin-top: 8px !important;
     }
 }
