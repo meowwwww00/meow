@@ -43,53 +43,95 @@
         <button onclick="history.back()"
             style="background-color: #666; color: white; padding: 12px; border: none; border-radius: 10px; width: 100%; cursor: pointer; margin-top: 10px; font-size: 1em; font-weight: bold;">取消返回</button>
     </div>
+    <script type="module">
+        // 1. 🌟 引入 Firebase 核心模組（路徑自動對齊你的 firebaseInit.js）
+        import { db, auth } from './firebaseInit.js';
+        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    <script>
-        const currentUser = localStorage.getItem('currentUser');
-        const storageKey = currentUser ? `transactions_${currentUser}` : 'transactions';
+        // 2. 擷取網頁欄位元件（請確保你 edit.html 裡輸入框的 id 與這些名字一致）
+        const form = document.getElementById('edit-transaction-form'); // 你的表單 ID
+        const descriptionInput = document.getElementById('description');
+        const amountInput = document.getElementById('amount');
+        const dateInput = document.getElementById('date');
+        const typeSelect = document.getElementById('type');
 
+        // 3. 🎯 精準抓取網址後面的 ?id=XXXXX 參數
         const urlParams = new URLSearchParams(window.location.search);
-        const transactionId = urlParams.get('id');
+        const recordId = urlParams.get('id');
 
-        const transactions = JSON.parse(localStorage.getItem(storageKey)) || [];
-        const transaction = transactions.find(t => String(t.id) === String(transactionId));
+        console.log("從網址偵測到要編輯的帳目 ID:", recordId);
 
-        if (transaction) {
-            // 填入原本的資料
-            document.getElementById('description').value = transaction.description || transaction.text || "";
-            document.getElementById('date').value = transaction.date;
-            document.getElementById('amount').value = Math.abs(transaction.amount);
+        // 4. 監聽登入狀態
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (recordId) {
+                    loadTransactionData(recordId);
+                } else {
+                    alert("網址缺少紀錄 ID，無法編輯！將返回主頁。");
+                    window.location.href = 'index.html';
+                }
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
 
-            // 🚀 根據原始金額的正負號設定下拉選單
-            document.getElementById('type').value = transaction.amount >= 0 ? "income" : "expense";
-        } else {
-            alert("找不到該筆紀錄！");
-            location.href = 'record.html';
+        // 5. 🚀 核心：從雲端把原本的資料抓下來，並塞回輸入框中
+        async function loadTransactionData(id) {
+            try {
+                // ⚠️ 關鍵修正點：這裡的集合名稱必須是 "transactions"，不能寫錯！
+                const docRef = doc(db, "transactions", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    console.log("成功撈到雲端原始資料:", data);
+
+                    // 將雲端資料塞入 HTML 欄位
+                    if (descriptionInput) descriptionInput.value = data.description || data.text || '';
+                    if (dateInput) dateInput.value = data.date || '';
+                    if (amountInput) amountInput.value = Math.abs(data.amount || 0);
+                    if (typeSelect) {
+                        typeSelect.value = (data.amount < 0) ? 'expense' : 'income';
+                    }
+                } else {
+                    // ❌ 之前會跳錯就是因為沒走到上面，跑到這裡來了
+                    alert("找不到該筆紀錄！請重新從明細頁點選。");
+                }
+            } catch (error) {
+                console.error("讀取資料失敗:", error);
+                alert("雲端讀取失敗：" + error.message);
+            }
         }
 
-        // 儲存邏輯
-        document.getElementById('saveBtn').onclick = function () {
-            const newDesc = document.getElementById('description').value;
-            const newDate = document.getElementById('date').value;
-            const newAmt = parseFloat(document.getElementById('amount').value);
-            const newType = document.getElementById('type').value;
+        // 6. 💾 監聽表單送出（使用者按儲存修改）
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            if (!newDesc || isNaN(newAmt)) {
-                alert("請填寫完整資訊！");
-                return;
-            }
+                const rawAmount = parseFloat(amountInput.value);
+                const amount = typeSelect.value === 'expense' ? -Math.abs(rawAmount) : Math.abs(rawAmount);
 
-            // 更新物件內容
-            transaction.description = newDesc;
-            transaction.date = newDate;
+                try {
+                    const docRef = doc(db, "transactions", recordId);
 
-            // 🚀 關鍵修改：根據選擇的類型決定儲存的正負號
-            transaction.amount = (newType === "expense") ? -Math.abs(newAmt) : Math.abs(newAmt);
+                    // 🔥 將修改後的資料寫回 Firebase
+                    await updateDoc(docRef, {
+                        text: descriptionInput.value,
+                        description: descriptionInput.value,
+                        amount: amount,
+                        date: dateInput.value,
+                        updatedAt: new Date()
+                    });
 
-            localStorage.setItem(storageKey, JSON.stringify(transactions));
-            alert("修改成功！");
-            location.href = 'record.html'; // 返回明細頁
-        };
+                    alert("資料修改成功，已即時同步至雲端！");
+                    window.location.href = 'index.html'; // 成功後跳回主頁或歷史頁
+                } catch (error) {
+                    console.error("更新失敗:", error);
+                    alert("儲存修改失敗：" + error.message);
+                }
+            });
+        }
     </script>
 </body>
 
